@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "docker-fastapi-serve-ml-model"
+version = "0.0.1"
+authors = [
+  { name="huaxlin", email="featureoverload@gmail.com" },
+]
+requires-python = ">=3.9"

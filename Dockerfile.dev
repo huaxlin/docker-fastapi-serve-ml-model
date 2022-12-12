@@ -1,0 +1,34 @@
+FROM python:3.9 AS mlbase
+LABEL maintainer="huaxlin <featureoverload@gmail.com>"
+
+
+# Setup Pypi
+ARG PyPI_CN_HOST=pypi.doubanio.com
+ARG PyPI_CN_REPO=https://${PyPI_CN_HOST}/simple
+#ARG PyPI_PRI_HOST=pypi.private.com
+#ARG PyPI_PRI_REPO=http://${PyPI_PRI_HOST}/root/public/+simple
+
+RUN echo "[global]" > /etc/pip.conf \
+ && echo "index-url = ${PyPI_CN_REPO}" >> /etc/pip.conf \
+# && echo "extra-index-url = ${PyPI_PRI_REPO}" >> /etc/pip.conf \
+ && echo "[install]" >> /etc/pip.conf \
+ && echo "trusted-host = ${PyPI_CN_HOST}" >> /etc/pip.conf \
+# && echo "               ${PyPI_PRI_HOST}" >> /etc/pip.conf \
+ && python -m pip install -U pip \
+ && python -m pip install wheel
+ENV TZ=Asia/Shanghai
+
+
+WORKDIR /code
+
+# create virtualenv for the ML project
+VOLUME /venv39
+### RUN python -m venv --copies --system-site-packages /venv39
+
+COPY ./requirements.txt /code/requirements.txt
+### RUN /venv39/bin/python -m pip install -r requirements.txt
+
+COPY ./pyproject.toml /code/pyproject.toml
+ENV PYTHONPATH=/code
+
+CMD ["tail", "/dev/null", "-f"]
