@@ -1,0 +1,3 @@
+[submodule "prediction-service-demo"]
+	path = prediction-service-demo
+	url = https://github.com/huaxlin/prediction-service-demo
