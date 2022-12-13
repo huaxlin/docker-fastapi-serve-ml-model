@@ -1,5 +1,9 @@
 # docker-fastapi-serve-ml-model
 
+```shell
+git clone --recurse-submodules https://github.com/huaxlin/docker-fastapi-serve-ml-model.git
+```
+
 ## Usage Guide
 
 ### Create a ML model from scratch
