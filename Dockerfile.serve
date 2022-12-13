@@ -19,6 +19,7 @@ RUN echo "[global]" > /etc/pip.conf \
 ENV TZ=Asia/Shanghai
 
 
+# prediction model
 RUN mkdir /code
 COPY music_recommender/ /code/music_recommender/
 COPY music_recommender.joblib /code/music_recommender.joblib
@@ -26,15 +27,16 @@ COPY venv39/ /venv39/
 ENV PYTHONPATH=/code
 
 
+# prediction service
 WORKDIR /app/
 
-RUN /venv39/bin/python3 -m pip install -U pip \
- && /venv39/bin/python3 -m pip install -U wheel
+RUN /venv39/bin/python3 -m pip install -U pip wheel
 
-RUN /venv39/bin/python3 -m pip install uvicorn[standard]==0.15.0 gunicorn==20.1.0
-RUN /venv39/bin/python3 -m pip install fastapi==0.68.1 pydantic==1.10.2
+COPY prediction-service-demo/requirements.txt /app/requirements.txt
+RUN /venv39/bin/python3 -m pip install -r /app/requirements.txt
 
-COPY app.py /app/app.py
+COPY .env /app/.env
+COPY prediction-service-demo/app/ /app/app/
 ENV PYTHONPATH "$PYTHONPATH:/app"
 
-CMD ["/venv39/bin/uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080", "--log-level", "debug"]
+CMD ["/venv39/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--log-level", "debug"]
